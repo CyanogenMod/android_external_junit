@@ -56,8 +56,7 @@ public abstract class BaseTestRunner implements TestListener {
 	public static void savePreferences() throws IOException {
 		FileOutputStream fos= new FileOutputStream(getPreferencesFile());
 		try {
-			// calling of the deprecated save method to enable compiling under 1.1.7
-			getPreferences().save(fos, "");
+			getPreferences().store(fos, "");
 		} finally {
 			fos.close();
 		}
@@ -96,7 +95,7 @@ public abstract class BaseTestRunner implements TestListener {
 			clearStatus();
 			return null;
 		}
-		Class testClass= null;
+		Class<?> testClass= null;
 		try {
 			testClass= loadSuiteClass(suiteClassName);
 		} catch (ClassNotFoundException e) {
@@ -204,8 +203,8 @@ public abstract class BaseTestRunner implements TestListener {
 	/**
 	 * Returns the loaded Class for a suite name.
 	 */
-	protected Class loadSuiteClass(String suiteClassName) throws ClassNotFoundException {
-		return getLoader().load(suiteClassName);
+	protected Class<?> loadSuiteClass(String suiteClassName) throws ClassNotFoundException {
+		return Class.forName(suiteClassName);
 	}
 
 	/**
@@ -214,17 +213,8 @@ public abstract class BaseTestRunner implements TestListener {
 	protected void clearStatus() { // Belongs in the GUI TestRunner class
 	}
 
-	/**
-	 * Returns the loader to be used.
-	 */
-	public TestSuiteLoader getLoader() {
-		if (useReloadingTestSuiteLoader())
-			return new ReloadingTestSuiteLoader();
-		return new StandardTestSuiteLoader();
-	}
-
 	protected boolean useReloadingTestSuiteLoader() {
-		return getPreference("loading").equals("true") && !inVAJava() && fLoading;
+		return getPreference("loading").equals("true") && fLoading;
 	}
 
 	private static File getPreferencesFile() {
@@ -262,21 +252,6 @@ public abstract class BaseTestRunner implements TestListener {
  		}
  		return intValue;
  	}
-
- 	public static boolean inVAJava() {
-		try {
-			Class.forName("com.ibm.uvm.tools.DebugSupport");
-		}
-		catch (Exception e) {
-			return false;
-		}
-		return true;
-	}
-
-	public static boolean inMac() {
-		return System.getProperty("mrj.version") != null;
-	}
-
 
 	/**
 	 * Returns a filtered stack trace

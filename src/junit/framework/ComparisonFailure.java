@@ -28,8 +28,9 @@ public class ComparisonFailure extends AssertionFailedError {
 	 * Returns "..." in place of common prefix and "..." in
 	 * place of common suffix between expected and actual.
 	 * 
-	 * @see java.lang.Throwable#getMessage()
+	 * @see Throwable#getMessage()
 	 */
+	@Override
 	public String getMessage() {
 		return new ComparisonCompactor(MAX_CONTEXT_LENGTH, fExpected, fActual).compact(super.getMessage());
 	}

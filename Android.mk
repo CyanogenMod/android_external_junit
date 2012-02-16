@@ -21,4 +21,8 @@ LOCAL_SRC_FILES := $(call all-java-files-under, src)
 
 LOCAL_MODULE := junit
 
+LOCAL_MODULE_TAGS := optional
+
+LOCAL_STATIC_JAVA_LIBRARIES := hamcrest-host
+
 include $(BUILD_HOST_JAVA_LIBRARY)

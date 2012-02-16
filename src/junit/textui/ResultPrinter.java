@@ -51,14 +51,14 @@ public class ResultPrinter implements TestListener {
 		printDefects(result.failures(), result.failureCount(), "failure");
 	}
 	
-	protected void printDefects(Enumeration booBoos, int count, String type) {
+	protected void printDefects(Enumeration<TestFailure> booBoos, int count, String type) {
 		if (count == 0) return;
 		if (count == 1)
 			getWriter().println("There was " + count + " " + type + ":");
 		else
 			getWriter().println("There were " + count + " " + type + "s:");
 		for (int i= 1; booBoos.hasMoreElements(); i++) {
-			printDefect((TestFailure) booBoos.nextElement(), i);
+			printDefect(booBoos.nextElement(), i);
 		}
 	}
 	
