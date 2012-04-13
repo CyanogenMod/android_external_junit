@@ -62,7 +62,8 @@ public abstract class BaseTestRunner implements TestListener {
 		}
 	}
 
-	public static void setPreference(String key, String value) {
+	// android-changed remove 'static' qualifier for API compatibility
+	public void setPreference(String key, String value) {
 		getPreferences().put(key, value);
 	}
 
@@ -200,6 +201,17 @@ public abstract class BaseTestRunner implements TestListener {
 	 */
 	protected abstract void runFailed(String message);
 
+	// BEGIN android-changed - add back getLoader() for API compatibility
+	/**
+	 * Returns the loader to be used.
+	 *
+	 * @deprecated not present in JUnit4.10
+	 */
+	public TestSuiteLoader getLoader() {
+		return new StandardTestSuiteLoader();
+	}
+	// END android-changed
+
 	/**
 	 * Returns the loaded Class for a suite name.
 	 */
@@ -265,6 +277,13 @@ public abstract class BaseTestRunner implements TestListener {
 		return BaseTestRunner.getFilteredTrace(trace);
 	}
 
+	// BEGIN android-changed - add back this method for API compatibility
+	/** @deprecated not present in JUnit4.10 */
+	public static boolean inVAJava() {
+		return false;
+	}
+	// END android-changed
+
 	/**
 	 * Filters stack frames from internal JUnit classes
 	 */
@@ -275,7 +294,10 @@ public abstract class BaseTestRunner implements TestListener {
 		StringWriter sw= new StringWriter();
 		PrintWriter pw= new PrintWriter(sw);
 		StringReader sr= new StringReader(stack);
-		BufferedReader br= new BufferedReader(sr);
+		// BEGIN android-changed
+		// Use a sensible default buffer size
+		BufferedReader br= new BufferedReader(sr, 1000);
+		// END android-changed
 
 		String line;
 		try {
