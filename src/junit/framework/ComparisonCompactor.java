@@ -1,5 +1,9 @@
 package junit.framework;
 
+// android-changed add @hide
+/**
+ * @hide not needed for public API
+ */
 public class ComparisonCompactor {
 
 	private static final String ELLIPSIS= "...";
