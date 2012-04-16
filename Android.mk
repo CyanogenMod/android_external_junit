@@ -15,10 +15,16 @@
 #
 
 LOCAL_PATH := $(call my-dir)
+
+# include definition of core-junit-files
+include $(LOCAL_PATH)/Common.mk
+
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(call all-java-files-under, src)
 
+# note: ideally this should be junit-host, but leave as is for now to avoid
+# changing all its dependencies
 LOCAL_MODULE := junit
 
 LOCAL_MODULE_TAGS := optional
@@ -26,3 +32,38 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_STATIC_JAVA_LIBRARIES := hamcrest-host
 
 include $(BUILD_HOST_JAVA_LIBRARY)
+
+# ----------------------------------
+# build a core-junit target jar that is built into Android system image
+
+include $(CLEAR_VARS)
+
+# TODO: remove extensions once core-tests is no longer dependent on it
+LOCAL_SRC_FILES := $(call all-java-files-under, src/junit/extensions)
+LOCAL_SRC_FILES += $(core-junit-files)
+
+LOCAL_NO_STANDARD_LIBRARIES := true
+LOCAL_JAVA_LIBRARIES := core
+LOCAL_JAVACFLAGS := $(local_javac_flags)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE := core-junit
+include $(BUILD_JAVA_LIBRARY)
+
+# ----------------------------------
+# build a core-junit-hostdex jar that contains exactly the same classes
+# as core-junit.
+
+include $(CLEAR_VARS)
+
+# TODO: remove extensions once apache-harmony/luni/ is no longer dependent
+# on it
+LOCAL_SRC_FILES := $(call all-java-files-under, src/junit/extensions)
+LOCAL_SRC_FILES += $(core-junit-files)
+LOCAL_NO_STANDARD_LIBRARIES := true
+LOCAL_JAVA_LIBRARIES := core-hostdex
+LOCAL_JAVACFLAGS := $(local_javac_flags)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE := core-junit-hostdex
+LOCAL_BUILD_HOST_DEX := true
+include $(BUILD_HOST_JAVA_LIBRARY)
+
