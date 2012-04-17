@@ -49,6 +49,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := core-junit
 include $(BUILD_JAVA_LIBRARY)
 
+ifeq ($(WITH_HOST_DALVIK),true)
 # ----------------------------------
 # build a core-junit-hostdex jar that contains exactly the same classes
 # as core-junit.
@@ -66,4 +67,6 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := core-junit-hostdex
 LOCAL_BUILD_HOST_DEX := true
 include $(BUILD_HOST_JAVA_LIBRARY)
+
+endif
 
