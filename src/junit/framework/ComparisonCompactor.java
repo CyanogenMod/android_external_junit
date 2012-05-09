@@ -23,14 +23,17 @@ public class ComparisonCompactor {
 	}
 
 	public String compact(String message) {
-		if (fExpected == null || fActual == null || areStringsEqual())
-			return Assert.format(message, fExpected, fActual);
-
+		if (fExpected == null || fActual == null || areStringsEqual()) {
+			// android-changed use local method instead of Assert.format, since
+			// the later is not part of Android API till API 16
+			return format(message, fExpected, fActual);
+		}
 		findCommonPrefix();
 		findCommonSuffix();
 		String expected= compactString(fExpected);
 		String actual= compactString(fActual);
-		return Assert.format(message, expected, actual);
+		// android-changed use local format method
+		return format(message, expected, actual);
 	}
 
 	private String compactString(String source) {
@@ -72,5 +75,13 @@ public class ComparisonCompactor {
 
 	private boolean areStringsEqual() {
 		return fExpected.equals(fActual);
+	}
+
+	// android-changed copy of Assert.format for reasons described above
+	private static String format(String message, Object expected, Object actual) {
+        	String formatted= "";
+        	if (message != null && message.length() > 0)
+            		formatted= message+" ";
+        	return formatted+"expected:<"+expected+"> but was:<"+actual+">";
 	}
 }
