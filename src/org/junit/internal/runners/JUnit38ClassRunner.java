@@ -66,7 +66,7 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 	}
 
 	private Test fTest;
-	
+
 	public JUnit38ClassRunner(Class<?> klass) {
 		this(new TestSuite(klass.asSubclass(TestCase.class)));
 	}
@@ -86,7 +86,7 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 	public TestListener createAdaptingListener(final RunNotifier notifier) {
 		return new OldTestClassAdaptingListener(notifier);
 	}
-	
+
 	@Override
 	public Description getDescription() {
 		return makeDescription(getTest());
@@ -152,7 +152,8 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 		fTest = test;
 	}
 
-	private Test getTest() {
+	// android-changed changed visibility to protected
+	protected Test getTest() {
 		return fTest;
 	}
 }
