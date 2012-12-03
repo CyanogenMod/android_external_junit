@@ -68,15 +68,26 @@ include $(BUILD_HOST_JAVA_LIBRARY)
 endif
 
 #-------------------------------------------------------
-# build a junit-runner jar representing the
-# junit classes in the frameworks/base android.test.runner.jar
+# build a junit-runner jar for the host JVM
+# (like the junit classes in the frameworks/base android.test.runner.jar)
 
 include $(CLEAR_VARS)
-
 LOCAL_SRC_FILES := $(junit-runner-files)
 LOCAL_MODULE := junit-runner
 LOCAL_MODULE_TAGS := optional
 include $(BUILD_STATIC_JAVA_LIBRARY)
+
+#-------------------------------------------------------
+# build a junit-runner for the host dalvikvm
+# (like the junit classes in the frameworks/base android.test.runner.jar)
+
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := $(junit-runner-files)
+LOCAL_MODULE := junit-runner-hostdex
+LOCAL_MODULE_TAGS := optional
+LOCAL_BUILD_HOST_DEX := true
+LOCAL_JAVA_LIBRARIES := core-junit-hostdex
+include $(BUILD_HOST_JAVA_LIBRARY)
 
 #-------------------------------------------------------
 # build a junit4-target jar representing the
