@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 import junit.framework.TestListener;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
+
 import org.junit.runner.Describable;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -17,6 +18,10 @@ import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 	private final class OldTestClassAdaptingListener implements
@@ -95,7 +100,9 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 	private static Description makeDescription(Test test) {
 		if (test instanceof TestCase) {
 			TestCase tc= (TestCase) test;
-			return Description.createTestDescription(tc.getClass(), tc.getName());
+			// android-changed - add getAnnotations(test) call
+			return Description.createTestDescription(tc.getClass(), tc.getName(),
+					getAnnotations(tc));
 		} else if (test instanceof TestSuite) {
 			TestSuite ts= (TestSuite) test;
 			String name= ts.getName() == null ? createSuiteDescription(ts) : ts.getName();
@@ -117,6 +124,25 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 			return Description.createSuiteDescription(test.getClass());
 		}
 	}
+
+	// android-changed added to support annotation filtering
+	/**
+	 * Get the annotations associated with given TestCase.
+	 * @param test
+	 * @return
+	 */
+	private static Annotation[] getAnnotations(TestCase test) {
+		try {
+			Method m = test.getClass().getDeclaredMethod(test.getName());
+			return m.getDeclaredAnnotations();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		return new Annotation[0];
+	}
+	// android-changed end
 
 	private static String createSuiteDescription(TestSuite ts) {
 		int count= ts.countTestCases();
@@ -162,6 +188,6 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 	 * Creates a shallow copy of given {@link TestSuite}.
 	 */
 	protected TestSuite createCopyOfSuite(TestSuite suite) {
-	    return new TestSuite(suite.getName());
+		return new TestSuite(suite.getName());
 	}
 }
