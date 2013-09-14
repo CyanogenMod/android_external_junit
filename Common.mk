@@ -37,3 +37,16 @@ define junit_to_document
  $(core-junit-files) \
  $(junit-runner-files)
 endef
+
+# List of source to build into junit4 target jars
+#
+junit4-target-src := \
+$(call all-java-files-under, src/org) \
+$(call all-java-files-under, src/junit/extensions) \
+$(call all-java-files-under, src/junit/runner) \
+$(call all-java-files-under, src/junit/textui) \
+src/junit/framework/ComparisonCompactor.java \
+src/junit/framework/JUnit4TestAdapterCache.java \
+src/junit/framework/JUnit4TestAdapter.java \
+src/junit/framework/JUnit4TestCaseFacade.java
+

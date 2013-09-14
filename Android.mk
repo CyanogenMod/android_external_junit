@@ -96,19 +96,24 @@ endif
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := $(call all-java-files-under, src/org)
-LOCAL_SRC_FILES += $(call all-java-files-under, src/junit/extensions)
-LOCAL_SRC_FILES += $(call all-java-files-under, src/junit/runner)
-LOCAL_SRC_FILES += $(call all-java-files-under, src/junit/textui)
-LOCAL_SRC_FILES += \
-	src/junit/framework/ComparisonCompactor.java \
-	src/junit/framework/JUnit4TestAdapterCache.java \
-	src/junit/framework/JUnit4TestAdapter.java \
-	src/junit/framework/JUnit4TestCaseFacade.java
+LOCAL_SRC_FILES := $(junit4-target-src)
 
 LOCAL_MODULE := junit4-target
 LOCAL_MODULE_TAGS := optional
 LOCAL_SDK_VERSION := 4
 LOCAL_STATIC_JAVA_LIBRARIES := hamcrest
+include $(BUILD_STATIC_JAVA_LIBRARY)
+
+#-------------------------------------------------------
+# Same as above, but does not statically link in dependencies
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := $(junit4-target-src)
+
+LOCAL_MODULE := junit4-target-nodeps
+LOCAL_MODULE_TAGS := optional
+LOCAL_SDK_VERSION := 4
+LOCAL_JAVA_LIBRARIES := hamcrest
 include $(BUILD_STATIC_JAVA_LIBRARY)
 
