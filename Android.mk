@@ -83,7 +83,10 @@ LOCAL_SRC_FILES += $(core-junit-files)
 LOCAL_JAVACFLAGS := $(local_javac_flags)
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := core-junit-hostdex
+<<<<<<< HEAD
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk $(LOCAL_PATH)/Common.mk
+=======
+>>>>>>> Remove uses of LOCAL_BUILD_HOST_DEX
 include $(BUILD_HOST_DALVIK_JAVA_LIBRARY)
 endif
 
