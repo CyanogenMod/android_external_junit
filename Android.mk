@@ -45,6 +45,7 @@ include $(BUILD_JAVA_LIBRARY)
 # ----------------------------------
 # build a junit-hostdex jar
 
+ifeq ($(WITH_HOST_DALVIK),true)
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(call all-java-files-under, src/junit/extensions)
 LOCAL_SRC_FILES += $(core-junit-files)
@@ -52,6 +53,7 @@ LOCAL_SRC_FILES += $(junit-runner-files)
 LOCAL_MODULE := junit-hostdex
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk $(LOCAL_PATH)/Common.mk
 include $(BUILD_HOST_DALVIK_JAVA_LIBRARY)
+endif
 
 # ----------------------------------
 # build a core-junit target jar that is built into Android system image
