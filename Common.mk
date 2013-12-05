@@ -2,7 +2,11 @@
 # List of junit files include in documentation.
 # Shared with frameworks/base.
 # based off libcore/Docs.mk
+# Exports:
+#   core-junit-files, junit-runner-files, junit_to_document, junit4-target-src.
+#   They are lists of .java files relative to external/junit/.
 
+ifndef junit4_common_include_once
 
 # List of source to build into the core-junit library
 #
@@ -32,21 +36,23 @@ src/junit/textui/TestRunner.java
 
 # List of junit javadoc source files for Android public API
 #
-# $(1): directory for search (to support use from frameworks/base)
-define junit_to_document
+junit_to_document := \
  $(core-junit-files) \
  $(junit-runner-files)
-endef
 
 # List of source to build into junit4 target jars
 #
 junit4-target-src := \
-$(call all-java-files-under, src/org) \
-$(call all-java-files-under, src/junit/extensions) \
-$(call all-java-files-under, src/junit/runner) \
-$(call all-java-files-under, src/junit/textui) \
+$(call find-files-in-subdirs, external/junit, \
+  "*.java", \
+    src/org \
+    src/junit/extensions \
+    src/junit/runner \
+    src/junit/textui) \
 src/junit/framework/ComparisonCompactor.java \
 src/junit/framework/JUnit4TestAdapterCache.java \
 src/junit/framework/JUnit4TestAdapter.java \
 src/junit/framework/JUnit4TestCaseFacade.java
 
+junit4_common_include_once := 1
+endif  # junit4_common_include_once
