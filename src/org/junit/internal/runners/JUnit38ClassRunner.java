@@ -7,7 +7,6 @@ import junit.framework.TestCase;
 import junit.framework.TestListener;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
-
 import org.junit.runner.Describable;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -18,10 +17,6 @@ import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 	private final class OldTestClassAdaptingListener implements
@@ -71,7 +66,7 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 	}
 
 	private Test fTest;
-
+	
 	public JUnit38ClassRunner(Class<?> klass) {
 		this(new TestSuite(klass.asSubclass(TestCase.class)));
 	}
@@ -91,7 +86,7 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 	public TestListener createAdaptingListener(final RunNotifier notifier) {
 		return new OldTestClassAdaptingListener(notifier);
 	}
-
+	
 	@Override
 	public Description getDescription() {
 		return makeDescription(getTest());
@@ -100,9 +95,7 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 	private static Description makeDescription(Test test) {
 		if (test instanceof TestCase) {
 			TestCase tc= (TestCase) test;
-			// android-changed - add getAnnotations(test) call
-			return Description.createTestDescription(tc.getClass(), tc.getName(),
-					getAnnotations(tc));
+			return Description.createTestDescription(tc.getClass(), tc.getName());
 		} else if (test instanceof TestSuite) {
 			TestSuite ts= (TestSuite) test;
 			String name= ts.getName() == null ? createSuiteDescription(ts) : ts.getName();
@@ -125,25 +118,6 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 		}
 	}
 
-	// android-changed added to support annotation filtering
-	/**
-	 * Get the annotations associated with given TestCase.
-	 * @param test
-	 * @return
-	 */
-	private static Annotation[] getAnnotations(TestCase test) {
-		try {
-			Method m = test.getClass().getMethod(test.getName());
-			return m.getDeclaredAnnotations();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-		return new Annotation[0];
-	}
-	// android-changed end
-
 	private static String createSuiteDescription(TestSuite ts) {
 		int count= ts.countTestCases();
 		String example = count == 0 ? "" : String.format(" [example: %s]", ts.testAt(0));
@@ -156,7 +130,7 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 			adapter.filter(filter);
 		} else if (getTest() instanceof TestSuite) {
 			TestSuite suite= (TestSuite) getTest();
-			TestSuite filtered= createCopyOfSuite(suite);
+			TestSuite filtered= new TestSuite(suite.getName());
 			int n= suite.testCount();
 			for (int i= 0; i < n; i++) {
 				Test test= suite.testAt(i);
@@ -164,11 +138,6 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 					filtered.addTest(test);
 			}
 			setTest(filtered);
-			// android-changed: handle empty suite
-			if (filtered.testCount() == 0) {
-				throw new NoTestsRemainException();
-			}
-			// android-changed end
 		}
 	}
 
@@ -183,16 +152,7 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 		fTest = test;
 	}
 
-	// android-changed changed visibility to protected
-	protected Test getTest() {
+	private Test getTest() {
 		return fTest;
-	}
-
-	// android-changed added
-	/**
-	 * Creates a shallow copy of given {@link TestSuite}.
-	 */
-	protected TestSuite createCopyOfSuite(TestSuite suite) {
-		return new TestSuite(suite.getName());
 	}
 }
