@@ -23,5 +23,5 @@ jar {
 
 dependencies {
     compile getAndroidPrebuilt('4')
-    compile project(':external:hamcrest')
+    compile project(':hamcrest')
 }
