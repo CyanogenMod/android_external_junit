@@ -6,8 +6,10 @@ sourceSets {
             srcDirs = ['src']
             include 'org/**',
                     'junit/extensions/**',
-                    'junit/runner/**',
-                    'junit/textui/**',
+                    // remove these packages since they are in android.test.runner
+                    // and proguard complains if they are present
+                    // 'junit/runner/**',
+                    // 'junit/textui/**',
                     'junit/framework/ComparisonCompactor.java',
                     'junit/framework/JUnit4TestAdapterCache.java',
                     'junit/framework/JUnit4TestAdapter.java',
