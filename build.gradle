@@ -1,7 +1,18 @@
 apply plugin: 'java'
 
+configurations {
+    host
+    target
+}
+
 sourceSets {
-    main {
+    host {
+        java {
+            srcDirs = ['src']
+        }
+    }
+
+    target {
         java {
             srcDirs = ['src']
             include 'org/**',
@@ -18,12 +29,28 @@ sourceSets {
     }
 }
 
-jar {
-    baseName 'junit4'
-    classifier 'target'
+dependencies {
+    targetCompile getAndroidPrebuilt('4')
+    targetCompile project(':hamcrest')
+    
+    hostCompile project(':hamcrest')
 }
 
-dependencies {
-    compile getAndroidPrebuilt('4')
-    compile project(':hamcrest')
+task targetJar(type: Jar) {
+    from sourceSets.target.output
+    dependsOn targetClasses
+    baseName "junit4"
+    classifier "target"
+}
+
+task hostJar(type: Jar) {
+    from sourceSets.host.output
+    dependsOn hostClasses
+    baseName "junit4"
+    classifier "host"
+}
+
+artifacts {
+    host hostJar
+    target targetJar
 }
