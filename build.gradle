@@ -1,8 +1,9 @@
 apply plugin: 'java'
 
 configurations {
-    host
-    target
+    // similar to 'default', export compile-time dependencies
+    host.extendsFrom(hostCompile)
+    target.extendsFrom(targetCompile)
 }
 
 sourceSets {
@@ -32,7 +33,7 @@ sourceSets {
 dependencies {
     targetCompile getAndroidPrebuilt('4')
     targetCompile project(':hamcrest')
-    
+
     hostCompile project(':hamcrest')
 }
 
