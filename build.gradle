@@ -1,5 +1,9 @@
 apply plugin: 'java'
 
+repositories {
+    maven { url '../../prebuilts/tools/common/m2/repository' }
+}
+
 configurations {
     // similar to 'default', export compile-time dependencies
     host.extendsFrom(hostCompile)
@@ -32,9 +36,9 @@ sourceSets {
 
 dependencies {
     targetCompile getAndroidPrebuilt('4')
-    targetCompile project(':hamcrest')
+    targetCompile 'org.hamcrest:hamcrest-core:1.1'
 
-    hostCompile project(':hamcrest')
+    hostCompile 'org.hamcrest:hamcrest-core:1.1'
 }
 
 task targetJar(type: Jar) {
