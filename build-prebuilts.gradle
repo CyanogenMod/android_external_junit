@@ -1,0 +1,12 @@
+apply from: "build-common.gradle"
+
+repositories {
+    maven { url '../../prebuilts/tools/common/m2/repository' }
+}
+
+dependencies {
+    targetCompile getAndroidPrebuilt('4')
+    targetCompile 'org.hamcrest:hamcrest-core:1.1'
+
+    hostCompile 'org.hamcrest:hamcrest-core:1.1'
+}
