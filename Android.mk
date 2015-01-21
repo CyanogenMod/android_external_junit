@@ -47,6 +47,7 @@ include $(BUILD_JAVA_LIBRARY)
 # ----------------------------------
 # build a junit-hostdex jar
 
+ifeq ($(HOST_OS),linux)
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(call all-java-files-under, src/junit/extensions)
 LOCAL_SRC_FILES += $(core-junit-files)
@@ -54,6 +55,7 @@ LOCAL_SRC_FILES += $(junit-runner-files)
 LOCAL_MODULE := junit-hostdex
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk $(LOCAL_PATH)/Common.mk
 include $(BUILD_HOST_DALVIK_JAVA_LIBRARY)
+endif # HOST_OS == linux
 
 # ----------------------------------
 # build a core-junit target jar that is built into Android system image
@@ -74,6 +76,7 @@ include $(BUILD_JAVA_LIBRARY)
 # build a core-junit-hostdex jar that contains exactly the same classes
 # as core-junit.
 
+ifeq ($(HOST_OS),linux)
 include $(CLEAR_VARS)
 # TODO: remove extensions once apache-harmony/luni/ is no longer dependent
 # on it
@@ -84,6 +87,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := core-junit-hostdex
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk $(LOCAL_PATH)/Common.mk
 include $(BUILD_HOST_DALVIK_JAVA_LIBRARY)
+endif # HOST_OS == linux
 
 #-------------------------------------------------------
 # build a junit-runner jar for the host JVM
