@@ -140,3 +140,19 @@ LOCAL_SDK_VERSION := 4
 LOCAL_JAVA_LIBRARIES := hamcrest
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk $(LOCAL_PATH)/Common.mk
 include $(BUILD_STATIC_JAVA_LIBRARY)
+
+#-------------------------------------------------------
+# Same as above, but for host dalvik. However, since we don't have
+# the SDK to provide the junit.framework.* classes, we must add
+# an extra library.
+
+ifeq ($(HOST_OS),linux)
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := $(junit4-target-src)
+LOCAL_MODULE := junit4-target-hostdex
+LOCAL_MODULE_TAGS := optional
+LOCAL_JAVA_LIBRARIES := core-junit-hostdex
+LOCAL_STATIC_JAVA_LIBRARIES := hamcrest-hostdex
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk $(LOCAL_PATH)/Common.mk
+include $(BUILD_HOST_DALVIK_JAVA_LIBRARY)
+endif # HOST_OS == linux
