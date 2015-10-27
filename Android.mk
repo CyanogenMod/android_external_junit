@@ -36,7 +36,8 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(call all-java-files-under, src/junit/extensions)
 LOCAL_SRC_FILES += $(core-junit-files)
 LOCAL_SRC_FILES += $(junit-runner-files)
-LOCAL_MODULE := junit-targetdex # TODO: lose the suffix here and rename "junit" to "junit-hostdex"
+# TODO: lose the suffix here and rename "junit" to "junit-hostdex"
+LOCAL_MODULE := junit-targetdex
 LOCAL_NO_STANDARD_LIBRARIES := true
 LOCAL_JAVA_LIBRARIES := core-libart
 LOCAL_MODULE_TAGS := tests
